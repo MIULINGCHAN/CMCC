@@ -1,0 +1,92 @@
+import com.ocs.bean.account.*;
+import com.ocs.bean.event.*;
+import com.ocs.utils.LocationUtils;
+
+global RatingResult result;
+
+/*
+ *	动感地带3G网聊卡
+ *	19元套餐
+ */
+rule "Rule_DG3G19_M_Z"
+	activation-group "DGDD"
+	salience 4
+    when
+    	dtEvent : DataTrafficEvent(eval(LocationUtils.isContains("国内",relativeLocation))&&produceChannel=="All");
+    	$ruleUsage : RuleUsage(ruleID=="Rule_DG3G19_M_Z"&&remainQuantity>=dtEvent.produceQuantity);
+    then
+        //System.out.println("Rule_DG3G19_M_Z");
+        result.ruleName = "Rule_DG3G19_M_Z";
+       	result.ruleID = $ruleUsage.ruleID;
+       	result.pkgID = "DG3G19";
+end
+
+rule "Rule_DG3G19_Y_SN"
+	activation-group "DGDD"
+	salience 5
+    when
+    	dtEvent : DataTrafficEvent(eval(LocationUtils.isContains("省内",relativeLocation))&&produceChannel=="All");
+    	$ruleUsage : RuleUsage(ruleID=="Rule_DG3G19_Y_SN"&&remainQuantity>=dtEvent.produceQuantity);
+    then
+        //System.out.println("Rule_DG3G19_Y_SN");
+        result.ruleName = "Rule_DG3G19_Y_SN";
+       	result.ruleID = $ruleUsage.ruleID;
+       	result.pkgID = "DG3G19";
+end
+
+rule "Rule_DG3G19_Y_SNX"
+	activation-group "DGDD"
+	salience 6
+    when
+    	dtEvent : DataTrafficEvent(eval(LocationUtils.isContains("省内",relativeLocation))&&produceChannel=="All"&&produceTime_start>="00:00:00"&&produceTime_end<="10:00:00");
+    	$ruleUsage : RuleUsage(ruleID=="Rule_DG3G19_Y_SNX"&& remainQuantity>=dtEvent.produceQuantity);
+    then
+        //System.out.println("Rule_DG3G19_Y_SNX");
+        result.ruleName = "Rule_DG3G19_Y_SNX";
+        result.ruleID = $ruleUsage.ruleID;
+        result.pkgID = "DG3G19";
+end
+
+rule "Rule_DG3G19_BASE"
+	activation-group "DGDD"
+	salience 1
+    when
+    	//dtEvent : DataTrafficEvent(relativeLocation=="国内"&&produceChannel=="All");
+    	dtEvent : DataTrafficEvent(eval(LocationUtils.isContains("国内",relativeLocation))&&produceChannel=="All");
+    	$ruleUsage : RuleUsage(ruleID=="Rule_DG3G19_BASE");
+    then
+        //System.out.println("Rule_DG3G19_BASE");
+        result.ruleName = "Rule_DG3G19_BASE";
+        result.ruleID = $ruleUsage.ruleID;
+        result.pkgID = "DG3G19";
+end
+
+/*
+ *	增值业务: 10元叠加包
+ */
+rule "Rule_DJ10_GN"
+	activation-group "DGDD"
+	salience 2
+    when
+    	dtEvent : DataTrafficEvent(eval(LocationUtils.isContains("国内",relativeLocation))&&produceChannel=="All");
+    	$ruleUsage : RuleUsage(ruleID=="Rule_DJ10_GN"&&remainQuantity>=dtEvent.produceQuantity);
+    then
+        //System.out.println("Rule_DJ10_GN");
+        result.ruleName = "Rule_DJ10_GN";
+        result.ruleID = $ruleUsage.ruleID;
+        result.pkgID = "DJ10";
+end
+
+rule "Rule_DJ10_SN"
+	activation-group "DGDD"
+	salience 1
+    when
+    	dtEvent : DataTrafficEvent(eval(LocationUtils.isContains("省内",relativeLocation))&&produceChannel=="All");
+    	$ruleUsage : RuleUsage(ruleID=="Rule_DJ10_SN"&&remainQuantity>=dtEvent.produceQuantity);
+    then
+        //System.out.println("Rule_DJ10_SN");
+        result.ruleName = "Rule_DJ10_SN";
+        result.ruleID = $ruleUsage.ruleID;
+        result.pkgID = "DJ10";
+end
+
